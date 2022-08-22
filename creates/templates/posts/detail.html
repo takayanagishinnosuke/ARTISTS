@@ -21,6 +21,9 @@
     <img src="{{ arts.image_four.url }}" class="img-thumbnail" width="30%" height="50%"/>
   </div>
 
+  <form method="post" action="{% url 'posts:delete' arts.id %}">{% csrf_token %}
+    <button class="btn" type="submit" onclick='return confirm("本当に削除しますか？");'>削除</button>
+  </form>
 </body>
 
 </html>
