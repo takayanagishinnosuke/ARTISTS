@@ -14,15 +14,26 @@ import numpy as np
 from . import forms
 from . import art_create
 import os
+from dotenv import load_dotenv
+from django.views.generic import TemplateView
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.contrib.auth.decorators import login_required
 
+load_dotenv()
 
+# TOP画面、loginのuser_idと一致している絵画データを羅列
+@login_required
 def index(request):
+  user_id = request.user.id
   # Postテーブルから更新の昇順で取得Query
-  posts = Post.objects.order_by('-published')
+  posts = Post.objects.filter(user_id=user_id).order_by('-published')
   # index.htmlにposts(データを渡す)
   return render(request,'posts/index.html', {'posts':posts})
 
 # 新規投稿の処理
+@login_required
 def new_create(request):
   if request.method == 'POST':
     # postされたformを受け取る。
@@ -31,14 +42,18 @@ def new_create(request):
     if form.is_valid(): 
       post = form.save(commit=False) # 引数のcommit=False <-まだcommitはしないよという事
       post.published = dt.now()  #publishedは今の時刻に
-
+      post.user_id = request.user.id
+      #Deeplの呼び出し
       word = art_create.deepL(post.title)
+      print(word) #英語翻訳
+      #repreecateで絵画生成
       filepath_list = art_create.create_art(word)
+      #filepath_listからファイルパスを取得して
       post.image = filepath_list[0]
       post.image_two = filepath_list[1]
       post.image_three = filepath_list[2]
       post.image_four = filepath_list[3]
-      post.save()
+      post.save() #保存
       return redirect('/creates') #URLで指定
   else:
     form = forms.PostForm() #formの再描画
@@ -46,6 +61,7 @@ def new_create(request):
   return render(request, 'posts/new_create.html', {'form': form})
 
 #詳細確認画面へ
+@login_required
 def detail(request,art_id):
   arts = Post.objects.get(id=art_id)
   return render(request,'posts/detail.html',{'arts':arts})
@@ -64,3 +80,34 @@ def delete(request,art_id):
   os.remove(path4)
   record.delete()
   return redirect('posts:index')
+
+#UPLOADの処理
+def upload(request,pk):
+  if request.method=="POST":
+    record = get_object_or_404(Post,id=pk)
+    filepath = ''
+    if "upload1" in request.POST:
+      filepath = str(record.image)
+    elif "upload2" in request.POST:
+      filepath = str(record.image_two)
+    elif "upload3" in request.POST:
+      filepath = str(record.image_three)
+    elif "upload4" in request.POST:
+      filepath = str(record.image_four)
+    
+    accesskey = os.getenv('ACCESSkEY')
+    secretkey = os.getenv('SECRETkEY')
+    region = 'ap-northeast-1'
+    s3 = boto3.client('s3',aws_access_key_id=accesskey,
+                      aws_secret_access_key=secretkey,
+                      region_name=region)
+    imgpath = f'media/{filepath}'
+    filename = filepath
+    bucket_name = 'artists.img'
+    
+    s3.upload_file(imgpath,bucket_name,filename)
+    print('upload ok')
+  
+  return redirect('posts:index')
+    
+  
