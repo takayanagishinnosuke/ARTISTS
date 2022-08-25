@@ -1,33 +1,24 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="ja" dir="ltr">
-<head>
-<meta charset="utf-8">
-<title></title>
-<link rel="stylesheet" href='{% static "auth/style.css" %}'/>
+{% extends 'base/auth_base.html' %}
 
-</head>
-<body>
-<h1>ログイン画面</h1>
+{% block content %}
+   <h1>ログイン画面</h1>
 
-<div class="reg">
-  <form method="post" action="{% url 'Login' %}">
-    {% csrf_token %}
+   <div class="loginform">
+   <form method="post" action="{% url 'auths:Login' %}">
+      {% csrf_token %}
 
-    <table class="reg_form">
-    <tr>
-    <td><label for="userid">ユーザーID:</label></td>
-    <td><input type="text" name="userid"></td>
-    <td><label for="password">パスワード：</label></td>
-    <td><input type="password" name="password"></td>
-    </tr>
-    </table>
+      <div class="mb-3">
+         <label for="userid" class="form-label">ユーザーID</label>
+         <input type="text" name="userid" class="form-control" aria-describedby="emailHelp">
+         <label for="password" class="form-label">パスワード</label>
+         <input type="password" name="password" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary" value="Login">ログイン</button>
+   </form>
+   </div>
+   <div class="message_div">
+      <p class="message">アカウントをお持ちですか？:
+      <a href="{% url 'auths:register' %}">アカウントを作成</a></p>
+   </div>
 
-    <input type="submit" class="btn" value="Login">
- </form>
-</div>
-   <p class="message">アカウントをお持ちですか？：
-   <a href="{% url 'register' %}">アカウントを作成</a>
-   </p>
-</body>
-</html>
+{% endblock %}

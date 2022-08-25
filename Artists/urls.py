@@ -19,7 +19,7 @@ from django.urls import path,include
 from django.conf.urls.static import static #静的ファイルを使えるよう読み込み
 
 urlpatterns = [
-    path('auths/', include('auths.urls')),
+    path('', include('auths.urls')),
     path('creates/', include('creates.urls')),
     path('admin/', admin.site.urls),
 ]+ static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

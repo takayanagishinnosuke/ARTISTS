@@ -1,28 +1,35 @@
+.container{
+  max-width: 980px;
+  margin: 5% auto;
+}
+
 h1{
   text-align: center;
+  font-size: medium;
 }
 
-div.reg{
-  background-color: #EEEEEE;
-  margin-left: 15%;
-  margin-right: 15%;
-}
-
-table.reg_form{
+.navbar{
   width: 100%;
-  border-spacing: 10px 30px;
-  padding-left:20px;
+}
+
+.nav-link{
+  margin: 0 30%;
+}
+
+.form-control{
+  margin: 1% auto;
 }
 
 .btn{
-    color: #fff;
-    background-color: #000033;
-    font-size: 1.0em;
-    padding: 10px 30px;
-    margin-left: 80%;
+  margin: 1% auto;
+  width: 120px;
+  height: 50px;
 }
 
-.btn:hover{
-  color: #fff;
-  background: #000099;
+.message_div{
+  margin-top: 3%;
+}
+
+#hint_id_username{
+  display: none;
 }

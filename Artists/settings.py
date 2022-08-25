@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'creates.apps.CreatesConfig',
     'auths',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -146,4 +147,6 @@ else:
     
 #デフォルトのプライマリーキー設定	
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+# bootstarap4の設定
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

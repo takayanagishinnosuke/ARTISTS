@@ -38,6 +38,9 @@ def new_create(request):
   if request.method == 'POST':
     # postされたformを受け取る。
     form = forms.PostForm(request.POST, request.FILES)
+    num = int(request.POST['radio'])
+    print(num)
+    
     # formのバリデーション
     if form.is_valid(): 
       post = form.save(commit=False) # 引数のcommit=False <-まだcommitはしないよという事
@@ -47,7 +50,8 @@ def new_create(request):
       word = art_create.deepL(post.title)
       print(word) #英語翻訳
       #repreecateで絵画生成
-      filepath_list = art_create.create_art(word)
+      user_id = str(request.user.id)
+      filepath_list = art_create.create_art(word,user_id,num)
       #filepath_listからファイルパスを取得して
       post.image = filepath_list[0]
       post.image_two = filepath_list[1]

@@ -1,18 +1,26 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>新規作成</title>
-</head>
-<body>
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+  <h2>新しいアートを作る</h2>
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <table>
       {{ form.as_table }}
     </table>
+
+    <div>
+      <div>
+        <label for="m1">モデル1</label>
+        <input type="radio" id="m1" name="radio" value="1" checked>
+      </div>
+      <div>
+        <label for="m2">モデル2</label>
+        <input type="radio" id="m2" name="radio" value="2">
+      </div>
+    </div>
+
     <button type="submit">Save</button>
   </form>
-</body>
-</html>
+
+{% endblock %}
