@@ -1,5 +1,6 @@
 from email.mime import image
 from urllib import request
+from venv import create
 from django.shortcuts import render, get_object_or_404, redirect 
 #get_object_or_404 -> ojectが無い時に404を返す関数
 from django.http import HttpResponse, HttpResponseRedirect
@@ -39,7 +40,6 @@ def new_create(request):
     # postされたformを受け取る。
     form = forms.PostForm(request.POST, request.FILES)
     num = int(request.POST['radio'])
-    print(num)
     
     # formのバリデーション
     if form.is_valid(): 
@@ -48,17 +48,31 @@ def new_create(request):
       post.user_id = request.user.id
       #Deeplの呼び出し
       word = art_create.deepL(post.title)
-      print(word) #英語翻訳
-      #repreecateで絵画生成
-      user_id = str(request.user.id)
-      filepath_list = art_create.create_art(word,user_id,num)
-      #filepath_listからファイルパスを取得して
-      post.image = filepath_list[0]
-      post.image_two = filepath_list[1]
-      post.image_three = filepath_list[2]
-      post.image_four = filepath_list[3]
-      post.save() #保存
-      return redirect('/creates') #URLで指定
+      print(word) #英語翻訳確認
+      
+      if num ==1:
+        #repreecateで絵画生成
+        user_id = str(request.user.id)
+        filepath_list = art_create.create_art(word,user_id)
+        #filepath_listからファイルパスを取得して
+        post.image = filepath_list[0]
+        post.image_two = filepath_list[1]
+        post.image_three = filepath_list[2]
+        post.image_four = filepath_list[3]
+        post.save() #保存
+        return redirect('/creates') #URLで指定
+      
+      elif num ==2:
+        user_id = str(request.user.id)
+        filepath_list = art_create.create_art2(word,user_id)
+        #filepath_listからファイルパスを取得して
+        post.image = filepath_list[0]
+        post.image_two = filepath_list[1]
+        post.image_three = filepath_list[2]
+        post.image_four = filepath_list[3]
+        post.save() #保存
+        
+        return redirect('/creates') 
   else:
     form = forms.PostForm() #formの再描画
 

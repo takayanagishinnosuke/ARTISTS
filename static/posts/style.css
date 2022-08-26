@@ -1,0 +1,48 @@
+.container{
+  max-width: 980px;
+  margin: 5% auto;
+}
+
+h2{
+  text-align: center;
+  font-size: medium;
+}
+
+.navbar{
+  width: 100%;
+}
+
+.nav-link{
+  margin: 0 30%;
+}
+
+.form-control{
+  margin: 1% auto;
+}
+
+.btn{
+  margin: 1% auto;
+  width: 120px;
+  height: 50px;
+}
+
+.message_div{
+  margin-top: 3%;
+}
+
+.title{
+  margin-bottom: 3%;
+}
+
+#loading {
+  width: 100%;
+  height: 500px;
+  display: none;
+  background-size: 30%;
+  background-position: center;
+  cursor: wait;
+  }
+#loading_span{
+  text-align: center;
+  margin-top: 3%;
+}

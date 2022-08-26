@@ -1,26 +1,32 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+  <div id="loading">
+    <span id="loading_span">Loading…</span>
+    <iframe id="player" width="560" height="315" src="https://www.youtube.com/embed/S0CnfNMOY3w?enablejsapi=1" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
 
-  <h2>新しいアートを作る</h2>
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <table>
-      {{ form.as_table }}
-    </table>
+  <div id="content">
+    <h2>新しいアートを作る</h2>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <table>
+        {{ form.as_table }}
+      </table>
 
-    <div>
       <div>
-        <label for="m1">モデル1</label>
-        <input type="radio" id="m1" name="radio" value="1" checked>
+        <div>
+          <label for="m1">R.A-Diffusion</label>
+          <input type="radio" id="m1" name="radio" value="1" checked>
+        </div>
+        <div>
+          <label for="m2">Dalle-Mini</label>
+          <input type="radio" id="m2" name="radio" value="2">
+        </div>
       </div>
-      <div>
-        <label for="m2">モデル2</label>
-        <input type="radio" id="m2" name="radio" value="2">
-      </div>
-    </div>
 
-    <button type="submit">Save</button>
-  </form>
+      <button type="submit" onclick="loading()">CREATE!!</button>
+    </form>
+  </div>
 
 {% endblock %}

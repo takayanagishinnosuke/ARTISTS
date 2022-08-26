@@ -78,4 +78,4 @@ def Login(request):
 def Logout(request):
   logout(request)
   #ログイン画面遷移
-  return HttpResponseRedirect(reverse('Login'))
+  return HttpResponseRedirect(reverse('auths:Login'))

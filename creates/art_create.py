@@ -16,18 +16,13 @@ load_dotenv()
 REPLICATE_API_TOKEN = os.getenv('REPLICATE_API_TOKEN')
 API_KEY = os.getenv('API_KEY')
 
-def create_art(trance_title,user_id,num):
-  number = num
+#モデル1のときに呼び出す関数
+def create_art(trance_title,user_id):
   dt_now = datetime.datetime.now()
   dt_now_fmt = dt_now.isoformat()
-  img_lists = []
   
-  if number == 1:  
-    model = replicate.models.get("afiaka87/retrieval-augmented-diffusion")
-    img_lists = model.predict(number_of_variations=8,prompts=trance_title)
-  else:
-    model = replicate.models.get("stability-ai/stable-diffusion")
-    img_lists = model.predict(num_outputs=8,prompt=trance_title)
+  model = replicate.models.get("afiaka87/retrieval-augmented-diffusion")
+  img_lists = model.predict(number_of_variations=8,prompts=trance_title)
     
   img_list = []
   file_name_list = []
@@ -39,7 +34,7 @@ def create_art(trance_title,user_id,num):
   for i in img_list[4:]:
     img = i
     print(i)
-    filename = '_'+dt_now_fmt + i[-12:]
+    filename = id+'_'+dt_now_fmt + i[-12:]
     file_path = 'media/' + id + '_' + dt_now_fmt + i[-12:]
     file_name_list.append(filename)
     res = requests.get(img)
@@ -47,7 +42,35 @@ def create_art(trance_title,user_id,num):
     with open(file_path,'wb') as f:
       f.write(images)
       
-  return file_name_list        
+  return file_name_list 
+
+#モデル2を選択した際に呼び出す関数
+def create_art2(trance_title,user_id):
+  dt_now = datetime.datetime.now()
+  dt_now_fmt = dt_now.isoformat()
+  model = replicate.models.get("borisdayma/dalle-mini")
+  img_lists = model.predict(n_predictions=8,prompt=trance_title)
+  
+  img_list = []
+  file_name_list = []
+  id = user_id
+  
+  for list_item in img_lists:
+    img_list.append(list_item['image'])
+
+  for i in img_list[4:]:
+    img = i
+    print(i)
+    filename = id+'_'+dt_now_fmt + i[-12:]
+    file_path = 'media/' + id + '_' + dt_now_fmt + i[-12:]
+    file_name_list.append(filename)
+    res = requests.get(img)
+    images = res.content
+    with open(file_path,'wb') as f:
+      f.write(images)
+      
+  return file_name_list
+       
 
 #DeepL_APIの処理(翻訳して返す)
 def deepL(inputtext):

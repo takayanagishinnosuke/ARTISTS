@@ -1,13 +1,16 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+<div class="title">
   <h2>最新のアート</h2>
-
+</div>
+<div class="post_div">
   {% for post in posts.all %}
     {{ post.title }}<br>
     {{ post.published }}<br>
     <a href="{% url 'posts:detail' art_id=post.id %}">詳細を見る</a> 
     <hr>
   {% endfor %}
+</div>
 
 {% endblock %}
