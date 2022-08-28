@@ -11,5 +11,5 @@ class PostForm(forms.ModelForm):
     fields = ('title',) #フィールド名
     #カラムにラベルを付けれるよ
     labels = {
-      'title':'タイトル',
+      'title':'創作するアートのタイトル',
     }  

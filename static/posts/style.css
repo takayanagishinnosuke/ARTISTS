@@ -4,8 +4,9 @@
 }
 
 h2{
-  text-align: center;
+  text-align: left;
   font-size: medium;
+  color: rgb(87, 87, 87);
 }
 
 .navbar{
@@ -34,15 +35,98 @@ h2{
   margin-bottom: 3%;
 }
 
+th{
+  color: rgb(127, 127, 127);
+}
+
+td{
+  color: rgb(127, 127, 127);
+}
+
+.btn{
+  text-align: center;
+  height: 40px;
+}
+
+/* 新しいアートを作る画面 */
+.new_create_form{
+  margin:5% auto;
+}
+
+
+.model_choese_h3{
+  text-align: left;
+  font-size: 16px;
+  font-weight: normal;
+  margin: 3% auto;
+  color: rgb(83, 83, 83);
+}
+
+.model_choese{
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.model{
+  width: 50%;
+}
+.model > h3{
+  text-align: left;
+  font-size: 15px;
+  font-weight: normal;
+  color: rgb(127, 127, 127);
+}
+
+.model > p{
+  text-align: left;
+  font-size: 13px;
+  color: rgb(127, 127, 127);
+}
+
+.form-check-label{
+  color: rgb(127, 127, 127);
+}
+
+.create_btn{
+  width: 100%;
+  padding: 10% 0;
+}
+
 #loading {
   width: 100%;
-  height: 500px;
+  height: 700px;
   display: none;
   background-size: 30%;
   background-position: center;
   cursor: wait;
   }
-#loading_span{
+
+#loading_p{
   text-align: center;
-  margin-top: 3%;
+  margin: 3%;
+  font-size: large;
+}
+
+/* 詳細ページ */
+.detail_title{
+  gap: 3%;
+  display: flex;
+  flex-basis: 100% auto;
+}
+
+.posts_images{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8%;
+  width: 100%;
+}
+
+.images{
+  width: 40%;
+  margin: 3% 0;
+}
+
+.images > input{
+  margin-top: 8%;
 }

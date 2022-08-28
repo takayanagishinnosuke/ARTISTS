@@ -1,20 +1,8 @@
-let tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-let firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-let player;
-function onYouTubePlayerAPIReady(){
-  player = new YT.Player("player", {
-    events: {
-      onReady: onPlayerReady
-    }
-  });
-}
-
-
 function loading(){
-  $("#loading").show();
-  $("#content").hide();
-  player.playVideo(); //動かない     
-}
+  let result = window.confirm('生成に時間がかかりますが実行してよろしいですか？')
+  if(result){
+    $("#loading").show(3000);
+    $("#content").hide();
+    }
+  }
+

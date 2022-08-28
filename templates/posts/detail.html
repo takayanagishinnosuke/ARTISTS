@@ -1,30 +1,37 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-  
-  {{ arts.title }}<br>
-  {{ arts.published }}<br>
-  <hr>
+<div class="detail_title">
+  <h3>{{ arts.title }}</h3><br>
+  <h3>{{ arts.published }}</h3><br>
+</div>
+<hr>
+<form method="post" action="{% url 'posts:upload' arts.pk %}">{% csrf_token %}
+  <div class="posts_images">
+    <div class="images">
+      <img src="{{ arts.image.url }}" class="img-thumbnail" width="100%" height="100%"/>
+      <input class="btn btn-outline-primary" type="submit" name="upload1" value="UPLOAD">
+    </div>
 
-  <form method="post" action="{% url 'posts:upload' arts.pk %}">{% csrf_token %}
-    <img src="{{ arts.image.url }}" class="img-thumbnail" width="30%" height="50%"/>
-    <input type="submit" name="upload1" value="UPLOAD">
-    <hr>
+    <div class="images">
+      <img src="{{ arts.image_two.url }}" class="img-thumbnail" width="100%" height="100%"/>
+      <input class="btn btn-outline-primary" type="submit" name="upload2" value="UPLOAD">
+    </div>
 
-    <img src="{{ arts.image_two.url }}" class="img-thumbnail" width="30%" height="50%"/>
-    <input type="submit" name="upload2" value="UPLOAD">
-    <hr>
+    <div class="images">
+      <img src="{{ arts.image_three.url }}" class="img-thumbnail" width="100%" height="100%"/>
+      <input class="btn btn-outline-primary" type="submit" name="upload3" value="UPLOAD">
+    </div>
 
-    <img src="{{ arts.image_three.url }}" class="img-thumbnail" width="30%" height="50%"/>
-    <input type="submit" name="upload3" value="UPLOAD">
-    <hr>
-
-    <img src="{{ arts.image_four.url }}" class="img-thumbnail" width="30%" height="50%"/>
-    <input type="submit" name="upload4" value="UPLOAD">
-  </form>
-
-  <form method="post" action="{% url 'posts:delete' arts.id %}">{% csrf_token %}
-    <button class="button" type="submit" onclick='return confirm("本当に削除しますか？");'>削除</button>
-  </form>
+    <div class="images">
+      <img src="{{ arts.image_four.url }}" class="img-thumbnail" width="100%" height="100%"/>
+      <input class="btn btn-outline-primary" type="submit" name="upload4" value="UPLOAD">
+    </div>
+  </div>
+</form>
+<hr>
+<form method="post" action="{% url 'posts:delete' arts.id %}">{% csrf_token %}
+  <button class="btn btn-danger" type="submit" onclick='return confirm("本当に削除しますか？");'>全て削除</button>
+</form>
 
 {% endblock %}

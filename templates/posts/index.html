@@ -4,13 +4,25 @@
 <div class="title">
   <h2>最新のアート</h2>
 </div>
-<div class="post_div">
+<table class="table">
+  <thead class="thead">
+    <tr>
+      <th scope="col">TITLE</th>
+      <th scope="col">PUBLISHED</th>
+      <th scope="col">DETAILS</th>
+    </tr>
+  </thead> 
+  <tbody>
   {% for post in posts.all %}
-    {{ post.title }}<br>
-    {{ post.published }}<br>
-    <a href="{% url 'posts:detail' art_id=post.id %}">詳細を見る</a> 
-    <hr>
+    <tr>
+      <td>{{ post.title }}</td>
+      <td>{{ post.published }}</td>
+      <td>
+        <a href="{% url 'posts:detail' art_id=post.id %}" class="btn btn-outline-secondary">詳細を見る</a> 
+      </td>
+    </tr>
   {% endfor %}
-</div>
+  </tbody>
+</table>
 
 {% endblock %}
