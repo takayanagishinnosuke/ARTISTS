@@ -140,12 +140,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
-if DEBUG:
-    MEDIA_ROOT = BASE_DIR/'media'
-    STATICFILES_DIRS = [os.path.join(BASE_DIR,'static/')]
-else:
-    MEDIA_ROOT = f'/var/www/{BASE_DIR.name}/media'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+MEDIA_ROOT = BASE_DIR/'media'
+STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
+
     
 #デフォルトのプライマリーキー設定	
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
