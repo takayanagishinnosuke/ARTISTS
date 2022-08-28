@@ -152,3 +152,6 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 # bootstarap4の設定
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+CSRF_TRUSTED_ORIGINS = ['https://artists-web-app.azurewebsites.net']
+
+
