@@ -28,7 +28,7 @@ SECRET_KEY = 'ur$=$k#ka13z71f(@o^o42&9gh6^o7%agk#s=_v#!!=-9oy-p('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://artists-web-app.azurewebsites.net']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'creates.apps.CreatesConfig',
+    'whitenoise.runserver_nostatic',
     'auths',
     'crispy_forms',
 ]
