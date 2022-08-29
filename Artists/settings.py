@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'ur$=$k#ka13z71f(@o^o42&9gh6^o7%agk#s=_v#!!=-9oy-p('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
@@ -142,6 +143,8 @@ STATIC_URL = '/static/'
 MEDIA_URL = 'media/'
 
 MEDIA_ROOT = BASE_DIR/'media'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = BASE_DIR/'static'
 STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
 
     
