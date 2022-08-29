@@ -146,7 +146,6 @@ MEDIA_ROOT = BASE_DIR/'media'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = BASE_DIR/'static'
 # STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
-
     
 #デフォルトのプライマリーキー設定	
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
