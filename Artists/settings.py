@@ -145,7 +145,7 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR/'media'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = BASE_DIR/'static'
-STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
+# STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
 
     
 #デフォルトのプライマリーキー設定	
