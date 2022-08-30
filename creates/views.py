@@ -13,7 +13,7 @@ from io import BytesIO
 from PIL import Image
 import numpy as np
 from . import forms
-from . import art_create
+from .art_create import deepL, create_art, create_art2
 import os
 from dotenv import load_dotenv
 from django.views.generic import TemplateView
@@ -21,6 +21,8 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.decorators import login_required
+from django_celery_results.models import TaskResult
+
 
 load_dotenv()
 
@@ -47,32 +49,28 @@ def new_create(request):
       post.published = dt.now()  #publishedは今の時刻に
       post.user_id = request.user.id
       #Deeplの呼び出し
-      word = art_create.deepL(post.title)
+      word = deepL(post.title)
       print(word) #英語翻訳確認
-      
       if num ==1:
         #repreecateで絵画生成
         user_id = str(request.user.id)
-        filepath_list = art_create.create_art(word,user_id)
-        #filepath_listからファイルパスを取得して
-        post.image = filepath_list[0]
-        post.image_two = filepath_list[1]
-        post.image_three = filepath_list[2]
-        post.image_four = filepath_list[3]
-        post.save() #保存
-        return redirect('/creates') #URLで指定
+        filepath_list = create_art.delay(word,user_id)        
+        post.task_id = filepath_list.id
+        post.save()
+                
+      return redirect('/creates') #URLで指定
       
-      elif num ==2:
-        user_id = str(request.user.id)
-        filepath_list = art_create.create_art2(word,user_id)
-        #filepath_listからファイルパスを取得して
-        post.image = filepath_list[0]
-        post.image_two = filepath_list[1]
-        post.image_three = filepath_list[2]
-        post.image_four = filepath_list[3]
-        post.save() #保存
+      # elif num ==2:
+      #   user_id = str(request.user.id)
+      #   filepath_list = art_create.create_art2(word,user_id)
+      #   #filepath_listからファイルパスを取得して
+      #   post.image = filepath_list[0]
+      #   post.image_two = filepath_list[1]
+      #   post.image_three = filepath_list[2]
+      #   post.image_four = filepath_list[3]
+      #   post.save() #保存
         
-        return redirect('/creates') 
+      #   return redirect('/creates') 
   else:
     form = forms.PostForm() #formの再描画
 

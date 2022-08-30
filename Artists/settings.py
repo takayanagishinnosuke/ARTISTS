@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'creates.apps.CreatesConfig',
     'whitenoise.runserver_nostatic',
+    'django_celery_results',
     'auths',
     'crispy_forms',
 ]
@@ -144,9 +145,10 @@ STATIC_URL = '/static/'
 MEDIA_URL = 'media/'
 
 MEDIA_ROOT = BASE_DIR/'media'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATIC_ROOT = BASE_DIR/'static'
-# STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
+#以下2つデプロイ時にコメント外す
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATIC_ROOT = BASE_DIR/'static'
+STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
     
 #デフォルトのプライマリーキー設定	
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
@@ -155,4 +157,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 CSRF_TRUSTED_ORIGINS = ['https://artists-web-app.azurewebsites.net']
 
-
+# Celery設定
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
+CELERY_RESULT_BACKEND = "django-db"

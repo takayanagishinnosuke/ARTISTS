@@ -11,4 +11,5 @@ class Post(models.Model):
   image_three = models.ImageField(blank=True)
   image_four = models.ImageField(blank=True)
   user_id = models.IntegerField(null=True,blank=True)
+  task_id = models.CharField(max_length=100,null=True,blank=True)
   

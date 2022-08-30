@@ -11,12 +11,14 @@ from pandas import json_normalize
 import datetime
 from urllib import request
 from .models import Post
+from celery import shared_task
 
 load_dotenv()
 REPLICATE_API_TOKEN = os.getenv('REPLICATE_API_TOKEN')
 API_KEY = os.getenv('API_KEY')
 
 #モデル1のときに呼び出す関数
+@shared_task
 def create_art(trance_title,user_id):
   dt_now = datetime.datetime.now()
   dt_now_fmt = dt_now.isoformat()
@@ -45,6 +47,7 @@ def create_art(trance_title,user_id):
   return file_name_list 
 
 #モデル2を選択した際に呼び出す関数
+@shared_task
 def create_art2(trance_title,user_id):
   dt_now = datetime.datetime.now()
   dt_now_fmt = dt_now.isoformat()
