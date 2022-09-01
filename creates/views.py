@@ -1,4 +1,5 @@
 from email.mime import image
+from unittest import result
 from urllib import request
 from venv import create
 from django.shortcuts import render, get_object_or_404, redirect 
@@ -32,6 +33,23 @@ def index(request):
   user_id = request.user.id
   # Postテーブルから更新の昇順で取得Query
   posts = Post.objects.filter(user_id=user_id).order_by('-published')
+  # fileパスが空のレコードを取得
+  fileobj = Post.objects.filter(image="")
+  for i in fileobj:
+    # task_idを格納
+    task_id = i.task_id
+    # TaskResultからid一致しているレコード取得して
+    result_object = TaskResult.objects.get(task_id=task_id)
+    # 処理完了&成功してたら
+    if result_object.status == "SUCCESS":
+      # 画像のファイルパスを取得して
+      file_path = eval(result_object.result)
+      i.image = file_path[0]
+      i.image_two = file_path[1]
+      i.image_three = file_path[2]
+      i.image_four = file_path[3]
+      i.save()
+
   # index.htmlにposts(データを渡す)
   return render(request,'posts/index.html', {'posts':posts})
 
@@ -54,6 +72,7 @@ def new_create(request):
       if num ==1:
         #repreecateで絵画生成
         user_id = str(request.user.id)
+        #非同期処理でバックグラウンドでは知らせる
         filepath_list = create_art.delay(word,user_id)        
         post.task_id = filepath_list.id
         post.save()

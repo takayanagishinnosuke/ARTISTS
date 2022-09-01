@@ -2,6 +2,7 @@ from distutils.command.upload import upload
 from django.db import models
 from django.contrib.auth.models import User
 
+
 #---DBモデルの定義---#
 class Post(models.Model):
   title = models.CharField(max_length=100,null=False)
