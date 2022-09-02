@@ -160,3 +160,4 @@ CSRF_TRUSTED_ORIGINS = ['https://artists-web-app.azurewebsites.net']
 # Celery設定
 CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
 CELERY_RESULT_BACKEND = "django-db"
+CELERY_TASK_TRACK_STARTED = True # taskが開始状態になったことを確認できるため
