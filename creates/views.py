@@ -1,4 +1,5 @@
 from email.mime import image
+from unittest import result
 from urllib import request
 from venv import create
 from django.shortcuts import render, get_object_or_404, redirect 
@@ -13,7 +14,7 @@ from io import BytesIO
 from PIL import Image
 import numpy as np
 from . import forms
-from . import art_create
+from .art_create import deepL, create_art, create_art2
 import os
 from dotenv import load_dotenv
 from django.views.generic import TemplateView
@@ -21,6 +22,8 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.decorators import login_required
+from django_celery_results.models import TaskResult
+
 
 load_dotenv()
 
@@ -28,6 +31,26 @@ load_dotenv()
 @login_required
 def index(request):
   user_id = request.user.id
+  # fileパスが空のレコードを取得
+  fileobj = Post.objects.filter(image="")
+  for i in fileobj:
+    # task_idを格納
+    task_id = i.task_id
+  try:
+    # TaskResultからid一致しているレコード取得して
+    result_object = TaskResult.objects.get(task_id=task_id)
+    # 処理完了&成功してたら
+    if result_object.status == "SUCCESS":
+      # 画像のファイルパスを取得して
+      file_path = eval(result_object.result)
+      i.image = file_path[0]
+      i.image_two = file_path[1]
+      i.image_three = file_path[2]
+      i.image_four = file_path[3]
+      i.save()
+  except:
+    print('Error')
+  
   # Postテーブルから更新の昇順で取得Query
   posts = Post.objects.filter(user_id=user_id).order_by('-published')
   # index.htmlにposts(データを渡す)
@@ -47,32 +70,24 @@ def new_create(request):
       post.published = dt.now()  #publishedは今の時刻に
       post.user_id = request.user.id
       #Deeplの呼び出し
-      word = art_create.deepL(post.title)
+      word = deepL(post.title)
       print(word) #英語翻訳確認
-      
       if num ==1:
         #repreecateで絵画生成
         user_id = str(request.user.id)
-        filepath_list = art_create.create_art(word,user_id)
-        #filepath_listからファイルパスを取得して
-        post.image = filepath_list[0]
-        post.image_two = filepath_list[1]
-        post.image_three = filepath_list[2]
-        post.image_four = filepath_list[3]
-        post.save() #保存
-        return redirect('/creates') #URLで指定
-      
+        #非同期処理でバックグラウンドでは知らせる
+        filepath_list = create_art.delay(word,user_id)        
+        post.task_id = filepath_list.id
+        post.save()
+        
       elif num ==2:
         user_id = str(request.user.id)
-        filepath_list = art_create.create_art2(word,user_id)
-        #filepath_listからファイルパスを取得して
-        post.image = filepath_list[0]
-        post.image_two = filepath_list[1]
-        post.image_three = filepath_list[2]
-        post.image_four = filepath_list[3]
-        post.save() #保存
-        
-        return redirect('/creates') 
+        #非同期処理でバックグラウンドでは知らせる
+        filepath_list = create_art2.delay(word,user_id)        
+        post.task_id = filepath_list.id
+        post.save()
+                
+      return redirect('/creates') #URLで指定
   else:
     form = forms.PostForm() #formの再描画
 

@@ -2,11 +2,10 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <div id="loading">
+  <!-- <div id="loading">
     <p id="loading_p">生成中です…時間がかかるのでYoutubeでも見ておきましょう</p>
     <iframe id="player" width="100%" height="100%" src="https://www.youtube.com/embed/S0CnfNMOY3w?enablejsapi=1" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-  </div>
-
+  </div> -->
   <div id="content">
     <h2>新しいアートを作る</h2>
     <form method="POST" class="new_create_form" enctype="multipart/form-data">
@@ -15,6 +14,7 @@
 
       <h3 class="model_choese_h3">AI画家を選択する*</h3>
       <div class="model_choese">
+        
         <div class="model">
           <h3>R-A-Diffusionさん</h3>
           <p>テキストがはいりますテキストがはいります<br>
@@ -24,6 +24,7 @@
             <label class="form-check-label" for="m1">R.A-Diffusionを選択</label>
           </div>
         </div>
+
         <div class="model">
           <h3>Dalle-Miniさん</h3>
           <p>テキストがはいりますテキストがはいります<br>

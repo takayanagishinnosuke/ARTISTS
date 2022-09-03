@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +28,7 @@ SECRET_KEY = 'ur$=$k#ka13z71f(@o^o42&9gh6^o7%agk#s=_v#!!=-9oy-p('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'creates.apps.CreatesConfig',
+    'whitenoise.runserver_nostatic',
+    'django_celery_results',
     'auths',
     'crispy_forms',
 ]
@@ -51,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
@@ -82,10 +87,10 @@ WSGI_APPLICATION = 'Artists.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'djangodb',
-        'USER': 'root',
-        'PASSWORD':'root',
-        'HOST':'localhost',
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DARABASE_USER'),
+        'PASSWORD':os.getenv('DATABASE_PASSWORD'),
+        'HOST':os.getenv('DARABASE_HOST'),
         'PORT':'',
     }
 }
@@ -136,17 +141,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 MEDIA_URL = 'media/'
-if DEBUG:
-    MEDIA_ROOT = BASE_DIR/'media'
-    STATICFILES_DIRS = [os.path.join(BASE_DIR,'static/')]
-else:
-    MEDIA_ROOT = f'/var/www/{BASE_DIR.name}/media'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+MEDIA_ROOT = BASE_DIR/'media'
+#以下2つデプロイ時にコメント外す
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATIC_ROOT = BASE_DIR/'static'
+STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
     
 #デフォルトのプライマリーキー設定	
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 # bootstarap4の設定
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+CSRF_TRUSTED_ORIGINS = ['https://artists-web-app.azurewebsites.net']
+
+# Celery設定
+# CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
+CELERY_BROKER_URL = 'redis://:MIKmxuURsfsZI9clUIJSE20MyN5UtKTEPAzCaH6Vf0o=@artists.redis.cache.windows.net:6379/0'
+
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_TASK_TRACK_STARTED = True # taskが開始状態になったことを確認できるため

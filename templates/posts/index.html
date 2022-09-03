@@ -17,9 +17,15 @@
     <tr>
       <td>{{ post.title }}</td>
       <td>{{ post.published }}</td>
+      {% if not post.image == "" %}
       <td>
         <a href="{% url 'posts:detail' art_id=post.id %}" class="btn btn-outline-secondary">詳細を見る</a> 
       </td>
+      {% else %}
+      <td>
+        <p>処理中</p>
+      </td>
+      {% endif %}
     </tr>
   {% endfor %}
   </tbody>
