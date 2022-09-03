@@ -77,8 +77,6 @@ def create_art2(trance_title,user_id):
 
 #DeepL_APIの処理(翻訳して返す)
 def deepL(inputtext):
-  sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding="utf-8")
-
   text =  inputtext
   source_lang = 'JA'
   target_lang = 'EN'

@@ -31,13 +31,12 @@ load_dotenv()
 @login_required
 def index(request):
   user_id = request.user.id
-  # Postテーブルから更新の昇順で取得Query
-  posts = Post.objects.filter(user_id=user_id).order_by('-published')
   # fileパスが空のレコードを取得
   fileobj = Post.objects.filter(image="")
   for i in fileobj:
     # task_idを格納
     task_id = i.task_id
+  try:
     # TaskResultからid一致しているレコード取得して
     result_object = TaskResult.objects.get(task_id=task_id)
     # 処理完了&成功してたら
@@ -49,7 +48,11 @@ def index(request):
       i.image_three = file_path[2]
       i.image_four = file_path[3]
       i.save()
-
+  except:
+    print('Error')
+  
+  # Postテーブルから更新の昇順で取得Query
+  posts = Post.objects.filter(user_id=user_id).order_by('-published')
   # index.htmlにposts(データを渡す)
   return render(request,'posts/index.html', {'posts':posts})
 
@@ -76,20 +79,15 @@ def new_create(request):
         filepath_list = create_art.delay(word,user_id)        
         post.task_id = filepath_list.id
         post.save()
+        
+      elif num ==2:
+        user_id = str(request.user.id)
+        #非同期処理でバックグラウンドでは知らせる
+        filepath_list = create_art2.delay(word,user_id)        
+        post.task_id = filepath_list.id
+        post.save()
                 
       return redirect('/creates') #URLで指定
-      
-      # elif num ==2:
-      #   user_id = str(request.user.id)
-      #   filepath_list = art_create.create_art2(word,user_id)
-      #   #filepath_listからファイルパスを取得して
-      #   post.image = filepath_list[0]
-      #   post.image_two = filepath_list[1]
-      #   post.image_three = filepath_list[2]
-      #   post.image_four = filepath_list[3]
-      #   post.save() #保存
-        
-      #   return redirect('/creates') 
   else:
     form = forms.PostForm() #formの再描画
 

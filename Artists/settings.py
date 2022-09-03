@@ -158,6 +158,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CSRF_TRUSTED_ORIGINS = ['https://artists-web-app.azurewebsites.net']
 
 # Celery設定
-CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
+# CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
+CELERY_BROKER_URL = 'redis://:MIKmxuURsfsZI9clUIJSE20MyN5UtKTEPAzCaH6Vf0o=@artists.redis.cache.windows.net:6379/0'
+
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_TASK_TRACK_STARTED = True # taskが開始状態になったことを確認できるため
