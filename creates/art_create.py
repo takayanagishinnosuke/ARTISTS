@@ -12,10 +12,17 @@ import datetime
 from urllib import request
 from .models import Post
 from celery import shared_task
+import boto3
 
 load_dotenv()
 REPLICATE_API_TOKEN = os.getenv('REPLICATE_API_TOKEN')
 API_KEY = os.getenv('API_KEY')
+
+# AWS S3の環境変数を読み込み
+accesskey = os.getenv('ACCESSkEY')
+secretkey = os.getenv('SECRETkEY')
+region = 'ap-northeast-1'
+bucket_name = 'artists.media'
 
 #モデル1のときに呼び出す関数
 @shared_task
@@ -43,6 +50,14 @@ def create_art(trance_title,user_id):
     images = res.content
     with open(file_path,'wb') as f:
       f.write(images)
+    #S3にアップ
+    s3 = boto3.client('s3',aws_access_key_id=accesskey,
+                      aws_secret_access_key=secretkey,
+                      region_name=region)
+    s3.upload_file(file_path,bucket_name,filename)
+    print('upload完了')
+    #ローカルのファイルは消す
+    os.remove(file_path)
       
   return file_name_list 
 
@@ -71,9 +86,16 @@ def create_art2(trance_title,user_id):
     images = res.content
     with open(file_path,'wb') as f:
       f.write(images)
+    #S3にアップ
+    s3 = boto3.client('s3',aws_access_key_id=accesskey,
+                  aws_secret_access_key=secretkey,
+                  region_name=region)
+    s3.upload_file(file_path,bucket_name,filename)
+    print('upload完了')
+    #ローカルのファイルは消す
+    os.remove(file_path)
       
   return file_name_list
-       
 
 #DeepL_APIの処理(翻訳して返す)
 def deepL(inputtext):
