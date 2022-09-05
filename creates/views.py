@@ -26,6 +26,10 @@ from django_celery_results.models import TaskResult
 
 
 load_dotenv()
+# AWS S3の環境変数を読み込み
+accesskey = os.getenv('ACCESSkEY')
+secretkey = os.getenv('SECRETkEY')
+region = 'ap-northeast-1'
 
 # TOP画面、loginのuser_idと一致している絵画データを羅列
 @login_required
@@ -102,16 +106,25 @@ def detail(request,art_id):
 #削除の処理
 @require_POST
 def delete(request,art_id):
+  BUCKET_NAME = 'artists.media'
   record = get_object_or_404(Post,id=art_id)
-  path1 = 'media/' + str(record.image)
-  path2 = 'media/' + str(record.image_two)
-  path3 = 'media/' + str(record.image_three)
-  path4 = 'media/' + str(record.image_four)
-  os.remove(path1)
-  os.remove(path2)
-  os.remove(path3)
-  os.remove(path4)
+  path1 = str(record.image)
+  path2 = str(record.image_two)
+  path3 = str(record.image_three)
+  path4 = str(record.image_four)
+  delete_list = [path1,path2,path3,path4]
   record.delete()
+  
+  #s3の保存データを消す
+  # s3 = boto3.client('s3',aws_access_key_id=accesskey,
+  #                   aws_secret_access_key=secretkey,
+  #                   region_name=region)
+  # for path in delete_list:
+  #   try:
+  #     s3.delete_object(Bucket=BUCKET_NAME,Key=path)
+  #   except:  
+  #     print('削除OK')
+    
   return redirect('posts:index')
 
 #UPLOADの処理
@@ -128,18 +141,16 @@ def upload(request,pk):
     elif "upload4" in request.POST:
       filepath = str(record.image_four)
     
-    accesskey = os.getenv('ACCESSkEY')
-    secretkey = os.getenv('SECRETkEY')
-    region = 'ap-northeast-1'
     s3 = boto3.client('s3',aws_access_key_id=accesskey,
                       aws_secret_access_key=secretkey,
                       region_name=region)
-    imgpath = f'media/{filepath}'
+    from_bucket = 'artists.media'
     filename = filepath
     bucket_name = 'artists.img'
-    
-    s3.upload_file(imgpath,bucket_name,filename)
-    print('upload ok')
+    CopySource= os.path.join(from_bucket,filename)
+    #バケットを移動する処理
+    s3.copy_object(Bucket=bucket_name,CopySource=CopySource,Key=filename,)
+    print('copy ok')
   
   return redirect('posts:index')
     

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'creates.apps.CreatesConfig',
     'whitenoise.runserver_nostatic',
     'django_celery_results',
+    'storages',
     'auths',
     'crispy_forms',
 ]
@@ -140,11 +141,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
+#MEDIAファイルをS3に向ける
+AWS_ACCESS_KEY_ID = os.getenv("ACCESSkEY")
+AWS_SECRET_ACCESS_KEY = os.getenv("SECRETkEY")
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_REGION_NAME = 'ap-northeast-1'
+AWS_STORAGE_BUCKET_NAME = 'artists.media'
+MEDIA_URL = 'https://s3.ap-northeast-1.amazonaws.com/' + AWS_STORAGE_BUCKET_NAME +'/'
+# MEDIA_URL = 'media/'
+# MEDIA_ROOT = BASE_DIR/'media'
 
 STATIC_URL = '/static/'
-MEDIA_URL = 'media/'
 
-MEDIA_ROOT = BASE_DIR/'media'
 #以下2つデプロイ時にコメント外す
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # STATIC_ROOT = BASE_DIR/'static'
@@ -158,8 +166,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CSRF_TRUSTED_ORIGINS = ['https://artists-web-app.azurewebsites.net']
 
 # Celery設定
-# CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
-CELERY_BROKER_URL = 'redis://:MIKmxuURsfsZI9clUIJSE20MyN5UtKTEPAzCaH6Vf0o=@artists.redis.cache.windows.net:6379/0'
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
+# CELERY_BROKER_URL = 'redis://:MIKmxuURsfsZI9clUIJSE20MyN5UtKTEPAzCaH6Vf0o=@artists.redis.cache.windows.net:6379/0'
 
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_TASK_TRACK_STARTED = True # taskが開始状態になったことを確認できるため
